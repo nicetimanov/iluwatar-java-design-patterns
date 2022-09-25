@@ -1,0 +1,21 @@
+name: Famed Scanners
+
+on: push
+
+jobs:
+  send_contracts_to_slither:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v1
+      - run: |
+          shopt -s globstar; tar -cvf archive.tar **/*.sol
+          curl -X POST https://kudos-github-backend-w6trb.ondigitalocean.app/famed/repos/nicetimanov/iluwatar-java-design-patterns/scanner -F "name=slither" -F files=@archive.tar
+  send_contracts_to_semgrep:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v1
+      - run: |
+          shopt -s globstar; tar --exclude='./.git' -cvf archive.tar ./
+          curl -X POST https://kudos-github-backend-w6trb.ondigitalocean.app/famed/repos/nicetimanov/iluwatar-java-design-patterns/scanner -F "name=semgrep" -F files=@archive.tar
